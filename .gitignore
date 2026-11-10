@@ -1,0 +1,8 @@
+bin/
+obj/
+.vs/
+.superpowers/
+tools/presentmon/*.exe
+node_modules/
+*.user
+TestResults/
