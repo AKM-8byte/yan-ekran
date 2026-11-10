@@ -36,7 +36,6 @@ public static class Program
 
         ApplicationConfiguration.Initialize();
         var logPath = Path.Combine(Path.GetDirectoryName(SettingsStore.DefaultPath())!, "hata.log");
-        AppDomain.CurrentDomain.UnhandledException += (_, e) => TryLog(logPath, e.ExceptionObject?.ToString());
         Application.ThreadException += (_, e) => TryLog(logPath, e.Exception.ToString());
 
         var mode = args.Fifa ? "fifa" : "normal";
@@ -47,6 +46,11 @@ public static class Program
         Firewall.EnsureRule(Port);
         var driver = new PawnIoDriver(new WindowsServiceControl());
         var driverStatus = driver.Prepare(args.Fifa);
+        AppDomain.CurrentDomain.UnhandledException += (_, e) =>
+        {
+            TryLog(logPath, e.ExceptionObject?.ToString());
+            driver.Shutdown(); // spec §8: program kapalıyken sürücü yüklü kalmamalı
+        };
 
         var watcher = GameWatcher.ForWindows(settings.FifaProcessNames);
         watcher.Poll();

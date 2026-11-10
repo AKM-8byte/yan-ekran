@@ -99,8 +99,8 @@ function run(token) {
       setBanner('connection', null);
       setBanner('fifa', null);
       store.del(TOKEN_KEY);
-      toast('Bu telefonun eşleşmesi silindi. Kodu yeniden gir.');
-      start();
+      // Eski oturumun dinleyicileri/zamanlayıcıları kalmasın diye sayfayı baştan yükle.
+      location.reload();
     }
   }
 

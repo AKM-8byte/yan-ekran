@@ -9,7 +9,6 @@ namespace TelefonPaneli.Windows.Media;
 /// </summary>
 public sealed class AppVolume : IDisposable
 {
-    readonly MMDeviceEnumerator _enumerator = new();
     readonly object _gate = new();
 
     public double? Get(string aumid)
@@ -33,7 +32,9 @@ public sealed class AppVolume : IDisposable
         {
             try
             {
-                using var device = _enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
+                // Ana iş parçacığı STA; numaralandırıcı her çağrıda çağıranın (iş parçacığı havuzu, MTA) üzerinde oluşturulur.
+                using var enumerator = new MMDeviceEnumerator();
+                using var device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Multimedia);
                 var sessions = device.AudioSessionManager.Sessions;
                 for (var i = 0; i < sessions.Count; i++)
                 {
@@ -58,5 +59,5 @@ public sealed class AppVolume : IDisposable
         catch (Exception) { return null; }
     }
 
-    public void Dispose() => _enumerator.Dispose();
+    public void Dispose() { }
 }

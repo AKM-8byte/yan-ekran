@@ -155,7 +155,8 @@ public sealed class SmtcMediaSource : IMediaController, IDisposable
         try
         {
             var props = await s.TryGetMediaPropertiesAsync();
-            var key = $"{s.SourceAppUserModelId}|{props?.Title}|{props?.Artist}";
+            // Chrome/Spotify önce başlığı, sonra ayrı bir olayla küçük resmi gönderir: anahtar küçük resmin varlığını da içerir.
+            var key = $"{s.SourceAppUserModelId}|{props?.Title}|{props?.Artist}|{props?.Thumbnail is not null}";
             if (key == _trackKey) return;
             byte[]? bytes = null;
             if (props?.Thumbnail is { } thumb)
