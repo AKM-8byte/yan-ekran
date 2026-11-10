@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>$(WinTfm)</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <OutputType>WinExe</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>TelefonPaneli</AssemblyName>
+    <RootNamespace>TelefonPaneli.App</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TelefonPaneli.Core\TelefonPaneli.Core.csproj" />
+    <ProjectReference Include="..\TelefonPaneli.Windows\TelefonPaneli.Windows.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="TelefonPaneli.App.Tests" />
+  </ItemGroup>
+</Project>
