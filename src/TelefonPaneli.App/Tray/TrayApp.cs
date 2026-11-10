@@ -57,7 +57,13 @@ public sealed class TrayApp : ApplicationContext
         _fifaTimer.Tick += (_, _) => CheckFifa();
         if (!o.FifaMode) _fifaTimer.Start();
 
-        _icon.ShowBalloonTip(4000, "Telefon Paneli çalışıyor",
+        if (o.Driver == DriverStatus.FifaStopFailed)
+        {
+            _icon.ShowBalloonTip(15000, "Sensör sürücüsü durdurulamadı!",
+                "PawnIO hâlâ yüklü. FIFA'yı açma. Sürücüyü kullanan başka programları (FanControl, HWiNFO vb.) kapatıp FIFA modunda yeniden başlat ya da bilgisayarı yeniden başlat.",
+                ToolTipIcon.Error);
+        }
+        else _icon.ShowBalloonTip(4000, "Telefon Paneli çalışıyor",
             "Telefonda aç: " + o.Url + "\nEşleştirme kodu: " + o.Pairing.CurrentCode, ToolTipIcon.Info);
     }
 
@@ -65,6 +71,7 @@ public sealed class TrayApp : ApplicationContext
     {
         DriverStatus.NotInstalled => "CPU sıcaklığı için PawnIO kurulu değil",
         DriverStatus.Failed => "Sensör sürücüsü başlatılamadı",
+        DriverStatus.FifaStopFailed => "⚠ Sürücü durdurulamadı — FIFA'yı AÇMA",
         _ => null,
     };
 

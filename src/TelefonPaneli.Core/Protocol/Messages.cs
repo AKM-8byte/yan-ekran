@@ -18,6 +18,7 @@ public static class Messages
         mode = s.Mode,
         gpuAsleep = s.GpuAsleep,
         fifaWarning = s.FifaWarning,
+        driverStopFailed = s.DriverStopFailed,
         metrics = s.Metrics.ToDictionary(kv => kv.Key, kv => kv.Value is { } v && double.IsFinite(v) ? Math.Round(v, 2) : (double?)null),
     }, Json);
 

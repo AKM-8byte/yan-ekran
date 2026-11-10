@@ -43,7 +43,7 @@ public sealed class MetricHub
                 foreach (var (k, v) in own) all[k] = v;
             }
             var f = _flags();
-            return new Snapshot(f.Mode, f.GpuAsleep, f.FifaWarning, all);
+            return new Snapshot(f.Mode, f.GpuAsleep, f.FifaWarning, all, f.DriverStopFailed);
         }
     }
 

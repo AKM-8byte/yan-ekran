@@ -78,3 +78,14 @@ public class MetricHubTests
     [InlineData("cpu.load", false)]
     public void RequiresDriver(string id, bool expected) => Assert.Equal(expected, MetricIds.RequiresDriver(id));
 }
+
+public class SnapshotFlagTests
+{
+    [Fact]
+    public void Driver_stop_failure_flag_is_serialized()
+    {
+        var hub = new MetricHub(Array.Empty<IMetricSource>(), () => new HubFlags("fifa", false, false, DriverStopFailed: true));
+        var json = TelefonPaneli.Core.Protocol.Messages.Snapshot(hub.Collect());
+        Assert.Contains("\"driverStopFailed\":true", json);
+    }
+}

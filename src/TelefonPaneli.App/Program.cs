@@ -71,7 +71,8 @@ public static class Program
         var hub = new MetricHub(sources, () => new HubFlags(
             mode,
             GpuAsleep: gate.HasNvidia && !gate.IsAwake,
-            FifaWarning: !args.Fifa && watcher.FifaRunning));
+            FifaWarning: !args.Fifa && watcher.FifaRunning,
+            DriverStopFailed: driverStatus == DriverStatus.FifaStopFailed));
 
         var media = SmtcMediaSource.CreateAsync(new AppVolume()).GetAwaiter().GetResult();
         disposables.Add(media);

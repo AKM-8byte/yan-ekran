@@ -68,6 +68,56 @@ public class PawnIoDriverTests
         Assert.Equal(DriverStatus.Failed, new PawnIoDriver(sc).Prepare(false));
     }
 
+    [Fact]
+    public void Fifa_mode_stop_failure_is_reported_as_FifaStopFailed()
+    {
+        var sc = new StuckStop();
+        Assert.Equal(DriverStatus.FifaStopFailed, new PawnIoDriver(sc).Prepare(fifaMode: true));
+    }
+
+    [Fact]
+    public void Fifa_mode_stop_exception_is_reported_as_FifaStopFailed()
+    {
+        var sc = new ThrowingStop();
+        Assert.Equal(DriverStatus.FifaStopFailed, new PawnIoDriver(sc).Prepare(fifaMode: true));
+    }
+
+    [Fact]
+    public void Fifa_mode_retries_while_pending_then_succeeds()
+    {
+        var sc = new SlowStop();
+        Assert.Equal(DriverStatus.DisabledForFifa, new PawnIoDriver(sc, retryDelay: TimeSpan.Zero).Prepare(fifaMode: true));
+        Assert.True(sc.StopCalls >= 2);
+    }
+
+    /// Stop çağrılsa da servis RUNNING kalır (başka bir program tutamaç tutuyor).
+    sealed class StuckStop : IServiceControl
+    {
+        public ServiceState? Query(string name) => ServiceState.Running;
+        public void Start(string name) { }
+        public void Stop(string name) { }
+        public void SetManualStart(string name) { }
+    }
+
+    sealed class ThrowingStop : IServiceControl
+    {
+        public ServiceState? Query(string name) => ServiceState.Running;
+        public void Start(string name) { }
+        public void Stop(string name) => throw new InvalidOperationException("zaman aşımı");
+        public void SetManualStart(string name) { }
+    }
+
+    /// İlk durdurma isteğinde STOP_PENDING (Other) kalır, ikincide durur.
+    sealed class SlowStop : IServiceControl
+    {
+        public int StopCalls;
+        ServiceState _s = ServiceState.Running;
+        public ServiceState? Query(string name) => _s;
+        public void Start(string name) { }
+        public void Stop(string name) { StopCalls++; _s = StopCalls >= 2 ? ServiceState.Stopped : ServiceState.Other; }
+        public void SetManualStart(string name) { }
+    }
+
     sealed class ThrowingStart : IServiceControl
     {
         public ServiceState? Query(string name) => ServiceState.Stopped;

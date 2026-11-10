@@ -81,7 +81,9 @@ function run(token) {
       case 'snapshot':
         renderer.updateSnapshot(msg);
         for (const [k, v] of Object.entries(msg.metrics || {})) if (v !== null && v !== undefined) seen.add(k);
-        setBanner('fifa', msg.fifaWarning ? 'FIFA açıldı — programı FIFA modunda yeniden başlat' : null);
+        setBanner('fifa', msg.driverStopFailed
+          ? 'Sensör sürücüsü durdurulamadı — FIFA’yı AÇMA (bilgisayardaki uyarıya bak)'
+          : msg.fifaWarning ? 'FIFA açıldı — programı FIFA modunda yeniden başlat' : null);
         break;
       case 'media':
         renderer.updateMedia(msg.state);
