@@ -1,4 +1,4 @@
-# Masaüstüne iki kısayol oluşturur: "Telefon Paneli" ve "Telefon Paneli (FIFA modu)".
+﻿# Masaüstüne iki kısayol oluşturur: "Telefon Paneli" ve "Telefon Paneli (FIFA modu)".
 # Başlangıç (Startup) klasörüne HİÇBİR ŞEY yazmaz: program Windows ile otomatik açılmaz.
 param(
     [string]$ExePath = (Join-Path $PSScriptRoot "..\src\TelefonPaneli.App\bin\Release\net10.0-windows10.0.19041.0\TelefonPaneli.exe")
