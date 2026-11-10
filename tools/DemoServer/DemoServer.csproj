@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Yalnızca geliştirme: sahte verilerle telefon arayüzünü önizler (yönetici yetkisi gerekmez). -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>$(WinTfm)</TargetFramework>
+    <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\TelefonPaneli.App\TelefonPaneli.App.csproj" />
+  </ItemGroup>
+</Project>

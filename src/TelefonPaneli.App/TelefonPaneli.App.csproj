@@ -15,6 +15,9 @@
     <ProjectReference Include="..\TelefonPaneli.Windows\TelefonPaneli.Windows.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Content Update="wwwroot/**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <InternalsVisibleTo Include="TelefonPaneli.App.Tests" />
   </ItemGroup>
   <ItemGroup Condition="Exists('$(PresentMonExe)')">

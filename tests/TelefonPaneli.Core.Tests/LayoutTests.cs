@@ -79,3 +79,18 @@ public class LayoutTests
         Assert.Empty(r.Pages[0].Tiles);
     }
 }
+
+public class DefaultLayoutGridTests
+{
+    // 4 sütunlu ızgarada S=1, M=2, L=4 hücre. Taslaktaki gibi Oyun ve Detay sayfaları 2 satıra (8 hücre) sığmalı.
+    [Theory]
+    [InlineData(0)]
+    [InlineData(2)]
+    public void Default_pages_fit_two_rows(int pageIndex)
+    {
+        var cells = DefaultLayout.Create().Pages[pageIndex].Tiles
+            .Where(t => t.Kind != "mediaStrip")
+            .Sum(t => t.Size switch { "S" => 1, "M" => 2, _ => 4 });
+        Assert.Equal(8, cells);
+    }
+}

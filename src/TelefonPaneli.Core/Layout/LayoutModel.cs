@@ -28,8 +28,8 @@ public static class DefaultLayout
         [
             new Page("oyun", "Oyun",
             [
-                Temp("t-cpu", "cpu.temp", "M"),
-                Temp("t-gpu", "gpu.temp", "M"),
+                Temp("t-cpu", "cpu.temp", "S"),
+                Temp("t-gpu", "gpu.temp", "S"),
                 M("t-fps", "fps", "L"),
                 M("t-ram", "ram.used"),
                 M("t-vram", "gpu.vram.used"),

@@ -1,0 +1,189 @@
+:root {
+  --bg: #0b0d10;
+  --tile: #161a20;
+  --tile-2: #1d222a;
+  --text: #e8eaed;
+  --muted: #8a93a0;
+  --ok: #4ade80;
+  --warn: #fb923c;
+  --hot: #f87171;
+  --accent: #60a5fa;
+  --spotify: #1db954;
+  --gap: 8px;
+  --pad: 10px;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+}
+
+button { font: inherit; color: inherit; }
+
+#app { position: fixed; inset: 0; }
+
+/* ---------- Üst şeritler ---------- */
+.banner {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 30;
+  padding: 6px 12px; font-size: 15px; font-weight: 600; text-align: center;
+}
+.banner.error { background: #7f1d1d; color: #fff; }
+.banner.warn { background: #9a3412; color: #fff; }
+
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 40;
+  background: #232831; color: var(--text); padding: 10px 16px; border-radius: 12px;
+  font-size: 15px; max-width: 90vw; text-align: center; box-shadow: 0 6px 24px #0008;
+}
+
+/* ---------- Sayfalayıcı ---------- */
+.pager { position: absolute; inset: 0; overflow: hidden; }
+.track { display: flex; height: 100%; transition: transform .28s ease; will-change: transform; }
+.track.dragging { transition: none; }
+.page {
+  flex: 0 0 100%; height: 100%;
+  padding: var(--pad) var(--pad) 22px;
+  padding-left: max(var(--pad), env(safe-area-inset-left));
+  padding-right: max(var(--pad), env(safe-area-inset-right));
+  display: flex; flex-direction: column; gap: var(--gap);
+}
+.dots {
+  position: absolute; bottom: 4px; left: 0; right: 0; text-align: center;
+  font-size: 10px; letter-spacing: 6px; color: #555; pointer-events: none;
+}
+.dots b { color: #ddd; }
+
+/* ---------- Izgara ---------- */
+.grid {
+  flex: 1; min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-rows: calc((100% - var(--gap)) / 2);
+  grid-auto-flow: row dense;
+  gap: var(--gap);
+  overflow-y: auto;
+}
+.grid.empty::after {
+  content: "Bu sayfa boş — düzenlemek için ekrana uzun bas";
+  grid-column: 1 / -1; grid-row: 1 / 3; align-self: center; text-align: center; color: var(--muted);
+}
+
+.tile {
+  position: relative;
+  background: var(--tile);
+  border-radius: 14px;
+  padding: 8px 12px;
+  display: flex; flex-direction: column; justify-content: center;
+  container-type: size;
+  overflow: hidden;
+}
+.tile.S { grid-column: span 1; grid-row: span 1; }
+.tile.M { grid-column: span 2; grid-row: span 1; }
+.tile.L { grid-column: span 2; grid-row: span 2; }
+
+.tile .label {
+  font-size: max(12px, min(11cqh, 9cqw)); color: var(--muted);
+  text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tile .value {
+  font-weight: 700; line-height: 1.02; white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+.tile.S .value { font-size: max(34px, min(46cqh, 34cqw)); }
+.tile.M .value { font-size: max(44px, min(52cqh, 22cqw)); }
+.tile.L .value { font-size: max(72px, min(48cqh, 40cqw)); }
+.tile .value .unit { font-size: .38em; font-weight: 600; color: var(--muted); margin-left: 4px; }
+.tile .sub { font-size: max(12px, min(11cqh, 9cqw)); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tile .shield { font-size: .45em; margin-left: 4px; }
+.tile .sleep { font-size: .45em; color: var(--muted); font-weight: 600; }
+
+.ok { color: var(--ok); }
+.warn { color: var(--warn); }
+.hot { color: var(--hot); }
+
+/* Grafik */
+.tile.chart .spark { flex: 1; min-height: 0; width: 100%; }
+.tile.chart .spark polyline { fill: none; stroke: var(--ok); stroke-width: 2; vector-effect: non-scaling-stroke; }
+.tile.chart .chart-head { display: flex; justify-content: space-between; align-items: baseline; }
+.tile.chart .chart-now { font-weight: 700; font-size: max(16px, min(16cqh, 10cqw)); }
+
+/* ---------- Şarkı şeridi ---------- */
+.strip {
+  flex: 0 0 56px; background: var(--tile); border-radius: 14px;
+  display: flex; align-items: center; gap: 10px; padding: 0 8px 0 8px; min-width: 0;
+}
+.strip .art { width: 40px; height: 40px; border-radius: 8px; flex: 0 0 auto; }
+.strip .text { flex: 1; min-width: 0; font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.strip .text b { font-weight: 700; }
+.strip .text span { color: var(--muted); }
+.strip .controls { display: flex; gap: 4px; }
+.strip .controls button { width: 48px; height: 44px; font-size: 22px; }
+
+.art {
+  background: linear-gradient(135deg, #2a3140, #12161c) center / cover no-repeat;
+}
+.art.has-img { background-color: #000; }
+
+button.ctl {
+  border: 0; background: #232831; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+}
+button.ctl:active { transform: scale(.94); background: #2c333e; }
+button.ctl.primary { background: var(--spotify); color: #000; }
+button.ctl:disabled { opacity: .35; }
+
+/* ---------- Müzik (tam sayfa) ---------- */
+.media-full {
+  flex: 1; min-height: 0; background: var(--tile); border-radius: 14px;
+  display: flex; align-items: center; gap: clamp(14px, 3vw, 28px); padding: clamp(10px, 3vh, 22px);
+}
+.media-full .art { height: min(100%, 44vw); aspect-ratio: 1; border-radius: 14px; flex: 0 0 auto; max-height: 300px; }
+.media-full .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.media-full .app { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.media-full .title { font-size: clamp(24px, 7vh, 40px); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.media-full .artist { font-size: clamp(16px, 4.5vh, 22px); color: #aab; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.progress { height: 6px; background: #2a2f37; border-radius: 3px; overflow: hidden; margin-top: 10px; }
+.progress i { display: block; height: 100%; width: 0; background: var(--ok); }
+.times { display: flex; justify-content: space-between; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.media-full .controls { display: flex; align-items: center; gap: clamp(10px, 2vw, 18px); margin-top: 10px; flex-wrap: wrap; }
+.media-full .controls button { width: clamp(56px, 15vh, 68px); height: clamp(56px, 15vh, 68px); font-size: 26px; }
+.volume { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 120px; }
+.volume input { flex: 1; accent-color: var(--ok); height: 32px; }
+.volume[hidden] { display: none; }
+
+/* ---------- Eşleştirme ---------- */
+.pair {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 6vw; padding: 16px;
+}
+.pair h1 { font-size: 26px; margin: 0 0 6px; }
+.pair p { margin: 0 0 14px; color: var(--muted); font-size: 15px; max-width: 320px; }
+.pair .digits { display: flex; gap: 10px; }
+.pair .digits span {
+  width: 56px; height: 68px; border-radius: 12px; background: var(--tile);
+  display: flex; align-items: center; justify-content: center; font-size: 38px; font-weight: 700;
+}
+.pair .msg { min-height: 22px; margin-top: 10px; font-size: 15px; color: var(--hot); }
+.pair .pad { display: grid; grid-template-columns: repeat(3, 72px); gap: 8px; }
+.pair .pad button { height: 56px; border-radius: 12px; border: 0; background: var(--tile-2); font-size: 26px; }
+.pair .pad button:active { background: #2c333e; }
+.shake { animation: shake .35s; }
+@keyframes shake { 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+
+/* ---------- Dikey uyarısı ---------- */
+.rotate {
+  display: none; position: fixed; inset: 0; z-index: 50; background: var(--bg);
+  align-items: center; justify-content: center; text-align: center; padding: 24px; font-size: 18px; color: var(--muted);
+}
+@media (orientation: portrait) and (max-width: 600px) {
+  body.connected .rotate { display: flex; }
+}
