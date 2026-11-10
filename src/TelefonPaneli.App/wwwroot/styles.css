@@ -48,7 +48,7 @@ button { font: inherit; color: inherit; }
 }
 
 /* ---------- Sayfalayıcı ---------- */
-.pager { position: absolute; inset: 0; overflow: hidden; }
+.pager { position: absolute; inset: 0; overflow: hidden; touch-action: none; }
 .track { display: flex; height: 100%; transition: transform .28s ease; will-change: transform; }
 .track.dragging { transition: none; }
 .page {
@@ -73,6 +73,9 @@ button { font: inherit; color: inherit; }
   grid-auto-flow: row dense;
   gap: var(--gap);
   overflow-y: auto;
+  /* Izgara dikey kaydırılabilir bir alan: touch-action vermezsek tarayıcı yatay dokunuşları da alıp
+     sayfa kaydırmayı iptal eder. pan-y: dikey kaydırma tarayıcıda, yatay hareket bizim kodumuzda. */
+  touch-action: pan-y;
 }
 .grid.empty::after {
   content: "Bu sayfa boş — düzenlemek için ekrana uzun bas";
