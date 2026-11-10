@@ -129,13 +129,16 @@ public sealed class WebServerTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task Ws_without_token_is_401()
+    public async Task Ws_with_unknown_token_is_closed_with_4401()
     {
+        // Tarayıcılar el sıkışmadaki 401'i 1006 olarak görür; telefonun eşleştirme ekranına dönebilmesi için 4401 ile kapatılmalı.
         var server = await StartAsync();
-        var ex = await Assert.ThrowsAnyAsync<Exception>(() => ConnectAsync(server, null));
-        Assert.Contains("401", ex.Message);
-        ex = await Assert.ThrowsAnyAsync<Exception>(() => ConnectAsync(server, "yanlis"));
-        Assert.Contains("401", ex.Message);
+        foreach (var token in new string?[] { null, "yanlis" })
+        {
+            var ws = await ConnectAsync(server, token);
+            var ex = await Assert.ThrowsAsync<WebSocketException>(() => ReceiveAsync(ws));
+            Assert.Equal("closed:4401", ex.Message);
+        }
     }
 
     [Fact]

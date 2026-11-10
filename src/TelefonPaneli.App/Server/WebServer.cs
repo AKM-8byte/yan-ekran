@@ -91,9 +91,14 @@ public static class WebServer
         app.Map("/ws", async (HttpContext ctx) =>
         {
             if (!ctx.WebSockets.IsWebSocketRequest) { ctx.Response.StatusCode = 400; return; }
-            if (!o.Pairing.IsValid(ctx.Request.Query["token"])) { ctx.Response.StatusCode = 401; return; }
-
             using var ws = await ctx.WebSockets.AcceptWebSocketAsync();
+            if (!o.Pairing.IsValid(ctx.Request.Query["token"]))
+            {
+                // El sıkışmada 401 dönülürse tarayıcı bunu 1006 olarak görür ve sonsuza dek yeniden dener.
+                // Kabul edip 4401 ile kapatmak telefonu eşleştirme ekranına döndürür.
+                await ws.CloseOutputAsync(Unpaired, "eşleşme yok", ctx.RequestAborted);
+                return;
+            }
             var client = new Client(ws);
             clients.Add(client);
             try

@@ -24,6 +24,7 @@ function setup() {
     onStatus: (s) => statuses.push(s),
     WebSocketImpl: FakeWs,
     setTimeoutImpl: (fn, ms) => timers.push({ fn, ms }),
+    setIntervalImpl: () => {},
   });
   return { conn, timers, statuses, messages };
 }
@@ -81,4 +82,28 @@ test('close sonrası yeniden bağlanmaz', () => {
   const { conn, timers } = setup();
   conn.close();
   assert.equal(timers.length, 0);
+});
+
+test('mesaj gelmeyen açık bağlantı 3 sn sonra kapatılıp yeniden denenir', () => {
+  FakeWs.all = [];
+  let now = 0;
+  const ticks = [];
+  const statuses = [];
+  createConnection({
+    url: 'ws://pc/ws',
+    onMessage: () => {},
+    onStatus: (s) => statuses.push(s),
+    WebSocketImpl: FakeWs,
+    setTimeoutImpl: () => {},
+    setIntervalImpl: (fn) => ticks.push(fn),
+    nowImpl: () => now,
+  });
+  FakeWs.all[0].open();
+  now = 2000; ticks.forEach((f) => f());
+  assert.equal(statuses.at(-1), 'connected');
+  FakeWs.all[0].message({ type: 'snapshot', metrics: {} });
+  now = 4500; ticks.forEach((f) => f());
+  assert.equal(statuses.at(-1), 'connected', 'mesaj geldiği için süre sıfırlandı');
+  now = 5500; ticks.forEach((f) => f());
+  assert.equal(statuses.at(-1), 'reconnecting');
 });

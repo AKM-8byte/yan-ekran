@@ -7,11 +7,19 @@ export function nextDelay(attempt) {
   return Math.min(5000, 1000 * 2 ** Math.max(0, attempt));
 }
 
-/**
- * onStatus: 'connected' | 'reconnecting' | 'unpaired'
- */
-export function createConnection({ url, onMessage, onStatus, WebSocketImpl = globalThis.WebSocket, setTimeoutImpl = globalThis.setTimeout }) {
+/** Açık bağlantıda bu kadar süre hiç mesaj gelmezse (sunucu her 500 ms gönderir) bağlantı ölü sayılır. */
+export const STALE_MS = 3000;
+
+/** onStatus: 'connected' | 'reconnecting' | 'unpaired' */
+export function createConnection({
+  url, onMessage, onStatus,
+  WebSocketImpl = globalThis.WebSocket,
+  setTimeoutImpl = globalThis.setTimeout,
+  setIntervalImpl = globalThis.setInterval,
+  nowImpl = Date.now,
+}) {
   let ws = null;
+  let lastMessage = nowImpl();
   let attempt = 0;
   let closed = false;
   const pending = [];
@@ -21,10 +29,12 @@ export function createConnection({ url, onMessage, onStatus, WebSocketImpl = glo
     ws = new WebSocketImpl(url);
     ws.onopen = () => {
       attempt = 0;
+      lastMessage = nowImpl();
       onStatus('connected');
       while (pending.length > 0) ws.send(pending.shift());
     };
     ws.onmessage = (e) => {
+      lastMessage = nowImpl();
       let msg;
       try { msg = JSON.parse(e.data); } catch { return; }
       if (msg && typeof msg.type === 'string') onMessage(msg);
@@ -44,6 +54,11 @@ export function createConnection({ url, onMessage, onStatus, WebSocketImpl = glo
   }
 
   connect();
+
+  // Sessizce kopan bağlantı (PC uykuya geçti, Wi-Fi düştü) tarayıcıda "açık" görünmeye devam eder.
+  setIntervalImpl(() => {
+    if (!closed && ws && ws.readyState === (WebSocketImpl.OPEN ?? 1) && nowImpl() - lastMessage > STALE_MS) ws.close();
+  }, 1000);
 
   return {
     send(obj) {
