@@ -4,7 +4,7 @@ using TelefonPaneli.Core.Settings;
 
 namespace TelefonPaneli.Core.Security;
 
-public enum PairStatus { Ok, WrongCode, Locked }
+public enum PairStatus { Ok, WrongCode, Locked, Closed }
 
 public sealed record PairResult(PairStatus Status, string? Token);
 
@@ -12,7 +12,10 @@ public sealed record PairResult(PairStatus Status, string? Token);
 public sealed class PairingService
 {
     public const int MaxAttempts = 5;
-    public static readonly TimeSpan LockDuration = TimeSpan.FromSeconds(30);
+    public static readonly TimeSpan BaseLock = TimeSpan.FromSeconds(30);
+    public static readonly TimeSpan MaxLock = TimeSpan.FromMinutes(15);
+    /// <summary>Eşleştirme yalnızca bu süre içinde kabul edilir (program açılışında ve kod gösterildiğinde açılır).</summary>
+    public static readonly TimeSpan Window = TimeSpan.FromMinutes(5);
 
     readonly SettingsStore _store;
     readonly Func<int> _rng;
@@ -20,6 +23,8 @@ public sealed class PairingService
     readonly object _gate = new();
     int _wrong;
     DateTimeOffset _lockedUntil = DateTimeOffset.MinValue;
+    DateTimeOffset _openUntil;
+    int _locks;
 
     public PairingService(SettingsStore store, Func<int>? rng = null, TimeProvider? time = null)
     {
@@ -27,7 +32,15 @@ public sealed class PairingService
         _rng = rng ?? (() => RandomNumberGenerator.GetInt32(0, 10000));
         _time = time ?? TimeProvider.System;
         CurrentCode = NewCode();
+        OpenWindow();
     }
+
+    public bool IsOpen => _time.GetUtcNow() < _openUntil;
+
+    /// <summary>Eşleştirmeyi <see cref="Window"/> süresince açar.</summary>
+    public void OpenWindow() { lock (_gate) _openUntil = _time.GetUtcNow() + Window; }
+
+    public void CloseWindow() { lock (_gate) _openUntil = DateTimeOffset.MinValue; }
 
     public string CurrentCode { get; private set; }
     public event Action<string>? CodeChanged;
@@ -39,6 +52,7 @@ public sealed class PairingService
         PairResult result;
         lock (_gate)
         {
+            if (!IsOpen) return new(PairStatus.Closed, null);
             if (_time.GetUtcNow() < _lockedUntil) return new(PairStatus.Locked, null);
 
             if (!string.Equals(code?.Trim(), CurrentCode, StringComparison.Ordinal))
@@ -46,7 +60,9 @@ public sealed class PairingService
                 if (++_wrong >= MaxAttempts)
                 {
                     _wrong = 0;
-                    _lockedUntil = _time.GetUtcNow() + LockDuration;
+                    var lockFor = TimeSpan.FromTicks(Math.Min(MaxLock.Ticks, BaseLock.Ticks << Math.Min(_locks, 10)));
+                    _locks++;
+                    _lockedUntil = _time.GetUtcNow() + lockFor;
                     newCode = CurrentCode = NewCode();
                     result = new(PairStatus.Locked, null);
                 }
@@ -55,6 +71,7 @@ public sealed class PairingService
             else
             {
                 _wrong = 0;
+                _locks = 0;
                 var token = Base64Url(RandomNumberGenerator.GetBytes(32));
                 var name = string.IsNullOrWhiteSpace(deviceName) ? "Telefon" : deviceName.Trim();
                 if (name.Length > 40) name = name[..40];

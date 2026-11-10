@@ -58,6 +58,17 @@ public static class WebServer
             });
         }
 
+        // DNS rebinding koruması: yalnızca IP adresi veya localhost ile gelen istekler.
+        app.Use(async (ctx, next) =>
+        {
+            if (!IsAllowedHost(ctx.Request.Host.Host))
+            {
+                ctx.Response.StatusCode = StatusCodes.Status400BadRequest;
+                return;
+            }
+            await next();
+        });
+
         app.UseWebSockets(new WebSocketOptions { KeepAliveInterval = TimeSpan.FromSeconds(15) });
         app.UseDefaultFiles();
         if (Directory.Exists(app.Environment.WebRootPath))
@@ -75,6 +86,7 @@ public static class WebServer
             {
                 PairStatus.Ok => Results.Ok(new { token = r.Token }),
                 PairStatus.Locked => Results.StatusCode(StatusCodes.Status429TooManyRequests),
+                PairStatus.Closed => Results.StatusCode(StatusCodes.Status403Forbidden),
                 _ => Results.Unauthorized(),
             };
         });
@@ -197,6 +209,13 @@ public static class WebServer
                 // Medya uygulaması kapanmış olabilir; telefon bağlantısını düşürmeyiz.
             }
         }
+    }
+
+    internal static bool IsAllowedHost(string host)
+    {
+        if (string.IsNullOrEmpty(host)) return false;
+        if (host.Equals("localhost", StringComparison.OrdinalIgnoreCase)) return true;
+        return System.Net.IPAddress.TryParse(host.Trim('[', ']'), out _);
     }
 
     static string SniffImageType(byte[] b) =>

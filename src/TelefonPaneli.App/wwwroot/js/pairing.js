@@ -40,7 +40,9 @@ export function showPairing(root, { fetchImpl = fetch } = {}) {
           resolve(token);
           return;
         }
-        msg.textContent = res.status === 429 ? 'Çok fazla deneme, 30 sn bekle' : 'Kod yanlış — bilgisayardaki kodu kontrol et';
+        msg.textContent = res.status === 429 ? 'Çok fazla deneme, biraz bekle'
+          : res.status === 403 ? 'Eşleştirme kapalı — bilgisayarda simgeye tıklayıp kodu göster'
+          : 'Kod yanlış — bilgisayardaki kodu kontrol et';
       } catch {
         msg.textContent = 'Bilgisayara ulaşılamadı';
       }

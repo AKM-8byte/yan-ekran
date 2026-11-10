@@ -77,6 +77,7 @@ public sealed class TrayApp : ApplicationContext
 
     public void ShowQr()
     {
+        _o.Pairing.OpenWindow();
         if (_qr is { IsDisposed: false })
         {
             _qr.Activate();

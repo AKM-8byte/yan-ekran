@@ -100,3 +100,45 @@ public sealed class PairingTests : IDisposable
         Assert.Equal(40, s.Devices.Single().Name.Length);
     }
 }
+
+public sealed class PairingWindowTests : IDisposable
+{
+    readonly string _dir = Directory.CreateTempSubdirectory("tp-").FullName;
+    public void Dispose() => Directory.Delete(_dir, true);
+    readonly FakeTimeProvider _time = new();
+    PairingService Make() => new(new SettingsStore(Path.Combine(_dir, "s.json")), () => 1234, _time);
+
+    [Fact]
+    public void Pairing_closes_after_window_and_reopens_on_demand()
+    {
+        var p = Make();
+        _time.Advance(TimeSpan.FromMinutes(6));
+        Assert.Equal(PairStatus.Closed, p.TryPair("1234", "x").Status);
+        p.OpenWindow();
+        Assert.Equal(PairStatus.Ok, p.TryPair("1234", "x").Status);
+    }
+
+    [Fact]
+    public void Closed_window_does_not_count_attempts()
+    {
+        var p = Make();
+        p.CloseWindow();
+        for (var i = 0; i < 10; i++) Assert.Equal(PairStatus.Closed, p.TryPair("0000", "x").Status);
+        p.OpenWindow();
+        Assert.Equal(PairStatus.Ok, p.TryPair("1234", "x").Status);
+    }
+
+    [Fact]
+    public void Lockout_grows_exponentially()
+    {
+        var p = Make();
+        void FiveWrong() { for (var i = 0; i < 5; i++) p.TryPair("0000", "x"); }
+        FiveWrong();
+        _time.Advance(TimeSpan.FromSeconds(31));
+        FiveWrong();                                    // ikinci kilit: 60 sn
+        _time.Advance(TimeSpan.FromSeconds(31));
+        Assert.Equal(PairStatus.Locked, p.TryPair("1234", "x").Status);
+        _time.Advance(TimeSpan.FromSeconds(30));
+        Assert.Equal(PairStatus.Ok, p.TryPair("1234", "x").Status);
+    }
+}

@@ -119,6 +119,28 @@ public sealed class WebServerTests : IAsyncLifetime
     }
 
     [Fact]
+    public async Task Pair_when_window_closed_is_403()
+    {
+        var server = await StartAsync();
+        _pairing.CloseWindow();
+        var res = await server.CreateClient().PostAsJsonAsync("/api/pair", new { code = _pairing.CurrentCode, deviceName = "x" });
+        Assert.Equal(HttpStatusCode.Forbidden, res.StatusCode);
+    }
+
+    [Theory]
+    [InlineData("evil.example.com", 400)]
+    [InlineData("192.168.1.20:5050", 200)]
+    [InlineData("localhost:5050", 200)]
+    [InlineData("[fe80::1]:5050", 200)]
+    public async Task Host_header_must_be_ip_or_localhost(string host, int expected)
+    {
+        // DNS rebinding: başka bir sitenin sayfası bizim adresimize yönlenip API'yi süremesin.
+        var server = await StartAsync();
+        var ctx = await server.SendAsync(c => { c.Request.Path = "/index.html"; c.Request.Host = new Microsoft.AspNetCore.Http.HostString(host); });
+        Assert.Equal(expected == 400, ctx.Response.StatusCode == 400);
+    }
+
+    [Fact]
     public async Task Pair_locked_is_429()
     {
         var server = await StartAsync();

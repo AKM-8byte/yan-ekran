@@ -15,6 +15,7 @@ public sealed class GpuActivityGate : IDisposable
 
     readonly bool? _forced;
     readonly string? _luidToken;
+    readonly EngineActivity? _activity;
     long _lastPoll;
     long _lastActive;
     bool _awake;
@@ -23,7 +24,11 @@ public sealed class GpuActivityGate : IDisposable
     {
         _forced = forceAwake ? true : forceAsleep ? false : null;
         NvidiaLuid = Dxgi.FindNvidiaLuid();
-        if (NvidiaLuid is { } l) _luidToken = $"luid_0x{(uint)l.High:X8}_0x{l.Low:X8}";
+        if (NvidiaLuid is { } l)
+        {
+            _luidToken = $"luid_0x{(uint)l.High:X8}_0x{l.Low:X8}";
+            _activity = new EngineActivity(_luidToken);
+        }
     }
 
     /// <summary>NVIDIA adaptörünün LUID'i; NVIDIA GPU yoksa null.</summary>
@@ -52,11 +57,7 @@ public sealed class GpuActivityGate : IDisposable
         {
             var data = new PerformanceCounterCategory("GPU Engine").ReadCategory();
             if (data["Utilization Percentage"] is not { } util) return false;
-            foreach (InstanceData inst in util.Values)
-            {
-                if (inst.RawValue > 0 && inst.InstanceName.Contains(_luidToken!, StringComparison.OrdinalIgnoreCase))
-                    return true;
-            }
+            return _activity!.Update(util.Values.Cast<InstanceData>().Select(i => (i.InstanceName, i.RawValue)));
         }
         catch (Exception ex) when (ex is InvalidOperationException or UnauthorizedAccessException or System.ComponentModel.Win32Exception) { }
         return false;
