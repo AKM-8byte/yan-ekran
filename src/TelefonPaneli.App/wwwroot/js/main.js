@@ -50,6 +50,7 @@ function run(token) {
   let layout = null;
   let pager = null;
   let editor = null;
+  const seen = new Set();
 
   const proto = location.protocol === 'https:' ? 'wss' : 'ws';
   const conn = createConnection({
@@ -79,6 +80,7 @@ function run(token) {
         break;
       case 'snapshot':
         renderer.updateSnapshot(msg);
+        for (const [k, v] of Object.entries(msg.metrics || {})) if (v !== null && v !== undefined) seen.add(k);
         setBanner('fifa', msg.fifaWarning ? 'FIFA açıldı — programı FIFA modunda yeniden başlat' : null);
         break;
       case 'media':
@@ -102,7 +104,15 @@ function run(token) {
 
   // Düzenleme modu (Task 14) kendi modülünde; yoksa sessizce atlanır.
   import('./editor.js')
-    .then((m) => { editor = m.installEditor({ getLayout: () => layout, getPager: () => pager, conn, redraw: draw, toast }); })
+    .then((m) => { editor = m.installEditor({
+        root: app,
+        getLayout: () => layout,
+        getPager: () => pager,
+        getSeen: () => seen,
+        save: (next) => { layout = next; conn.send({ type: 'saveLayout', layout: next }); draw(); },
+        redraw: () => { if (layout) draw(); },
+        toast,
+      });; })
     .catch(() => {});
 
   keepAwake();
