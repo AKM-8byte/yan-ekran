@@ -44,6 +44,17 @@ public sealed class SettingsStore(string path)
         }
     }
 
+    /// <summary>Oku-değiştir-yaz işlemini tek kilit altında yapar.</summary>
+    public AppSettings Update(Func<AppSettings, AppSettings> change)
+    {
+        lock (_gate)
+        {
+            var next = change(Load());
+            Save(next);
+            return next;
+        }
+    }
+
     static AppSettings Normalize(AppSettings s) => new(
         LayoutValidator.Sanitize(s.Layout),
         s.Devices?.Where(d => d is not null && !string.IsNullOrEmpty(d.TokenHash)).ToList() ?? [],

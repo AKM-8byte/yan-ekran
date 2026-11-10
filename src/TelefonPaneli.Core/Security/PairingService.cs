@@ -58,9 +58,7 @@ public sealed class PairingService
                 var token = Base64Url(RandomNumberGenerator.GetBytes(32));
                 var name = string.IsNullOrWhiteSpace(deviceName) ? "Telefon" : deviceName.Trim();
                 if (name.Length > 40) name = name[..40];
-                var s = _store.Load();
-                s.Devices.Add(new DeviceToken(Guid.NewGuid().ToString("N"), name, Hash(token), _time.GetUtcNow()));
-                _store.Save(s);
+                _store.Update(s => { s.Devices.Add(new DeviceToken(Guid.NewGuid().ToString("N"), name, Hash(token), _time.GetUtcNow())); return s; });
                 newCode = CurrentCode = NewCode();
                 result = new(PairStatus.Ok, token);
             }
@@ -81,9 +79,7 @@ public sealed class PairingService
     {
         lock (_gate)
         {
-            var s = _store.Load();
-            s.Devices.Clear();
-            _store.Save(s);
+            _store.Update(s => { s.Devices.Clear(); return s; });
         }
         DevicesForgotten?.Invoke();
     }
