@@ -6,6 +6,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>TelefonPaneli</AssemblyName>
     <RootNamespace>TelefonPaneli.App</RootNamespace>
+    <PresentMonExe>$(MSBuildThisFileDirectory)..\..\tools\presentmon\PresentMon.exe</PresentMonExe>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\TelefonPaneli.Core\TelefonPaneli.Core.csproj" />
@@ -14,4 +15,10 @@
   <ItemGroup>
     <InternalsVisibleTo Include="TelefonPaneli.App.Tests" />
   </ItemGroup>
+  <ItemGroup Condition="Exists('$(PresentMonExe)')">
+    <None Include="$(PresentMonExe)" Link="tools\presentmon\PresentMon.exe" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <Target Name="WarnPresentMon" BeforeTargets="Build" Condition="!Exists('$(PresentMonExe)')">
+    <Warning Text="tools/presentmon/PresentMon.exe yok: FPS kutucuklari bos kalacak (bkz. tools/presentmon/README.md)" />
+  </Target>
 </Project>
