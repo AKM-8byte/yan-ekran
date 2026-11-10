@@ -6,6 +6,8 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>TelefonPaneli</AssemblyName>
     <RootNamespace>TelefonPaneli.App</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
     <PresentMonExe>$(MSBuildThisFileDirectory)..\..\tools\presentmon\PresentMon.exe</PresentMonExe>
   </PropertyGroup>
   <ItemGroup>
@@ -17,6 +19,9 @@
   </ItemGroup>
   <ItemGroup Condition="Exists('$(PresentMonExe)')">
     <None Include="$(PresentMonExe)" Link="tools\presentmon\PresentMon.exe" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="QRCoder" Version="1.8.1" />
   </ItemGroup>
   <Target Name="WarnPresentMon" BeforeTargets="Build" Condition="!Exists('$(PresentMonExe)')">
     <Warning Text="tools/presentmon/PresentMon.exe yok: FPS kutucuklari bos kalacak (bkz. tools/presentmon/README.md)" />
