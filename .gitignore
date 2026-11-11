@@ -6,3 +6,4 @@ tools/presentmon/*.exe
 node_modules/
 *.user
 TestResults/
+artifacts/

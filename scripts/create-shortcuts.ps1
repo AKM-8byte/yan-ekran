@@ -1,7 +1,12 @@
 ﻿# Masaüstüne iki kısayol oluşturur: "YanEkran" ve "YanEkran (FIFA modu)".
 # Başlangıç (Startup) klasörüne HİÇBİR ŞEY yazmaz: program Windows ile otomatik açılmaz.
+# Sürüm paketinde betik YanEkran.exe ile aynı klasördedir; depoda ise Release derleme çıktısını kullanır.
 param(
-    [string]$ExePath = (Join-Path $PSScriptRoot "..\src\TelefonPaneli.App\bin\Release\net10.0-windows10.0.19041.0\YanEkran.exe")
+    [string]$ExePath = $(
+        $nextTo = Join-Path $PSScriptRoot "YanEkran.exe"
+        if (Test-Path $nextTo) { $nextTo }
+        else { Join-Path $PSScriptRoot "..\src\TelefonPaneli.App\bin\Release\net10.0-windows10.0.19041.0\YanEkran.exe" }
+    )
 )
 
 $exe = (Resolve-Path $ExePath -ErrorAction Stop).Path

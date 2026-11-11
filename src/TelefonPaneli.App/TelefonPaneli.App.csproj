@@ -5,6 +5,10 @@
     <OutputType>WinExe</OutputType>
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>YanEkran</AssemblyName>
+    <Version>1.0.0</Version>
+    <Product>YanEkran</Product>
+    <Company>AKM-8byte</Company>
+    <Copyright>© 2026 AKM-8byte, MIT</Copyright>
     <RootNamespace>TelefonPaneli.App</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
