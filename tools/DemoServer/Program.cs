@@ -59,7 +59,7 @@ sealed class DemoMedia : IMediaController
     public event Action? Changed;
     public MediaState? Current => new("Spotify", Tracks[_track].T, Tracks[_track].A, _playing,
         (long)(DateTime.UtcNow - _started).TotalMilliseconds % Tracks[_track].D, Tracks[_track].D, _track, _volume);
-    public Task<byte[]?> GetArtAsync() => Task.FromResult<byte[]?>(null);
+    public Task<byte[]?> GetArtAsync() => Task.FromResult<byte[]?>(DemoArt.Png(_track));
     public Task SendAsync(MediaAction a)
     {
         if (a == MediaAction.PlayPause) _playing = !_playing;
@@ -68,4 +68,29 @@ sealed class DemoMedia : IMediaController
         return Task.CompletedTask;
     }
     public Task SetVolumeAsync(double v) { _volume = v; Changed?.Invoke(); return Task.CompletedTask; }
+}
+
+static class DemoArt
+{
+    // Demo için çizilmiş kapak: degrade zemin ve nota işareti.
+    public static byte[] Png(int track)
+    {
+        using var bmp = new System.Drawing.Bitmap(300, 300);
+        using (var g = System.Drawing.Graphics.FromImage(bmp))
+        {
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            var (a, b) = track == 0
+                ? (System.Drawing.Color.FromArgb(29, 185, 84), System.Drawing.Color.FromArgb(10, 60, 40))
+                : (System.Drawing.Color.FromArgb(124, 58, 237), System.Drawing.Color.FromArgb(30, 20, 70));
+            using var bg = new System.Drawing.Drawing2D.LinearGradientBrush(new System.Drawing.Rectangle(0, 0, 300, 300), a, b, 45f);
+            g.FillRectangle(bg, 0, 0, 300, 300);
+            using var font = new System.Drawing.Font("Segoe UI Symbol", 120, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            using var fg = new System.Drawing.SolidBrush(System.Drawing.Color.FromArgb(220, 255, 255, 255));
+            var size = g.MeasureString("♪", font);
+            g.DrawString("♪", font, fg, (300 - size.Width) / 2, (300 - size.Height) / 2);
+        }
+        using var ms = new MemoryStream();
+        bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+        return ms.ToArray();
+    }
 }

@@ -11,6 +11,16 @@ CPU/GPU sıcaklığı ve kullanımı, RAM/VRAM, FPS, ağ ve ping değerlerini, a
 - **Yalnızca yerel ağ:** İnternete hiçbir şey gitmez. İlk bağlantıda 4 haneli eşleştirme kodu istenir.
 - **Hafif:** Oyun sırasında hedef ortalama < %1 CPU, < 150 MB RAM.
 
+## Ekran görüntüleri
+
+Telefon yatay; sayfalar arasında parmakla kaydırılır. (Görüntüler demo sunucusunun sahte verileriyle alındı.)
+
+| Oyun | Müzik |
+|---|---|
+| ![Oyun sayfası: CPU/GPU sıcaklığı, RAM, VRAM, büyük FPS kutucuğu ve şarkı şeridi](docs/screenshots/oyun.jpg) | ![Müzik sayfası: kapak, şarkı bilgisi, ilerleme çubuğu, büyük kontrol tuşları ve ses kaydırıcısı](docs/screenshots/muzik.jpg) |
+| **Detay** | **Düzenleme modu** |
+| ![Detay sayfası: CPU saat hızı, GPU gücü, fan, disk, ağ, ping ve 60 saniyelik CPU grafiği](docs/screenshots/detay.jpg) | ![Düzenleme modu: kutucuk silme, sürükleme, S/M/L boyut ve renk eşikleri](docs/screenshots/duzenleme.jpg) |
+
 ## Nasıl çalışır
 
 ```
@@ -66,3 +76,10 @@ dotnet run --project tools/DemoServer   # sahte verilerle arayüz önizleme: htt
 | `src/TelefonPaneli.App` | Tepsi uygulaması, web sunucusu, telefon arayüzü (`wwwroot`) |
 | `tools/DemoServer` | Yönetici yetkisi gerektirmeyen sahte veri sunucusu |
 | `docs/superpowers` | Tasarım belgesi ve uygulama planı |
+
+## Lisans
+
+[MIT](LICENSE) © 2026 AKM-8byte
+
+PresentMon (Intel, MIT), LibreHardwareMonitor (MPL-2.0), NAudio (MIT) ve QRCoder (MIT) kendi lisanslarıyla dağıtılır.
+PresentMon.exe bu depoda bulunmaz; kullanıcı kendisi indirir.
