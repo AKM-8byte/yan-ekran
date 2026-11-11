@@ -5,7 +5,7 @@
     <OutputType>WinExe</OutputType>
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>YanEkran</AssemblyName>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Product>YanEkran</Product>
     <Company>AKM-8byte</Company>
     <Copyright>© 2026 AKM-8byte, MIT</Copyright>
