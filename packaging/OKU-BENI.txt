@@ -1,0 +1,40 @@
+YanEkran {SURUM}
+==============
+
+Oyun oynarken telefonunu (Android, iPhone deneysel) bilgisayarın yanında ikinci ekran olarak kullan:
+CPU/GPU sıcaklığı, FPS, RAM ve Spotify / YouTube Music kontrolü.
+https://github.com/AKM-8byte/yan-ekran
+
+KURULUM
+-------
+1. Bu klasörü kalıcı bir yere çıkar (ör. C:\Programlar\YanEkran). Zip'in içinden çalıştırma.
+2. "kisayol-olustur.ps1" dosyasına sağ tıkla -> "PowerShell ile çalıştır".
+   Masaüstünde "YanEkran" ve "YanEkran (FIFA modu)" kısayolları oluşur.
+   Program Windows ile otomatik başlamaz.
+3. "YanEkran"ı aç. Yönetici izni ister (sensörler, FPS ve güvenlik duvarı kuralı için).
+4. Saatin yanındaki simgeye çift tıkla, QR kodu telefonla okut, 4 haneli kodu gir.
+   Telefon ve bilgisayar aynı Wi-Fi'da olmalı.
+5. Android: Chrome menüsü -> "Ana ekrana ekle". Ekran kapanmasın diye telefon şarjdayken
+   Geliştirici seçenekleri -> "Uyanık kal"ı aç.
+
+IPHONE / IPAD (DENEYSEL, test edilmedi)
+--------------------------------------
+- Safari'de aç, Paylaş -> "Ana Ekrana Ekle". Ana ekrandan ilk açılışta kodu bir kez daha gir.
+- Ekran kapanmasın: Ayarlar -> Ekran ve Parlaklık -> Otomatik Kilit -> "Asla".
+- iOS yönü kilitleyemez: Yön Kilidi kapalıyken telefonu yatay çevir.
+
+İPUÇLARI
+--------
+- Sayfalar arasında parmakla sağa/sola kaydır.
+- Ekrana uzun bas: kutucuk ekle, sil, sürükle, boyutlandır.
+- CPU sıcaklığı, fan ve disk sensörleri için isteğe bağlı PawnIO sürücüsü gerekir
+  (https://pawnio.eu). Kurulu değilse o kutucuklar "—" gösterir, gerisi çalışır.
+- Hile korumalı oyunlarda (ör. FIFA) PawnIO kuruluysa "YanEkran (FIFA modu)" kısayolunu kullan.
+
+"kucuk" paketi .NET 10 Desktop Runtime ve ASP.NET Core Runtime 10'un kurulu olmasını ister:
+https://dotnet.microsoft.com/download/dotnet/10.0
+
+LİSANS
+------
+YanEkran: MIT (LICENSE.txt). PresentMon: Intel Corporation, MIT (tools\presentmon\LICENSE.txt).
+LibreHardwareMonitor: MPL-2.0. NAudio, QRCoder: MIT.

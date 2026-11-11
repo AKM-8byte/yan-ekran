@@ -4,6 +4,7 @@ import { createConnection } from './connection.js';
 import { showPairing } from './pairing.js';
 import { createPager } from './pager.js';
 import { createRenderer } from './render.js';
+import { keepAwakeHint } from './platform.js';
 
 const TOKEN_KEY = 'tp.token';
 const PAGE_KEY = 'tp.page';
@@ -137,7 +138,7 @@ async function keepAwake() {
   });
   if (!ok && !store.get(HINT_KEY)) {
     store.set(HINT_KEY, '1');
-    toast('Ekranın kapanmaması için: telefonu şarja tak ve Geliştirici seçenekleri → "Uyanık kal"ı aç', 8000);
+    toast(keepAwakeHint(), 8000);
   }
   try { await screen.orientation?.lock?.('landscape'); } catch { /* tam ekran değilse olmaz */ }
 }

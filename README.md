@@ -1,13 +1,13 @@
 # YanEkran
 
-Oyun oynarken Android telefonunu bilgisayarın yanına dik: **YanEkran** onu ikinci bir ekrana çevirir.
+Oyun oynarken telefonunu (Android, iPhone deneysel) bilgisayarın yanına dik: **YanEkran** onu ikinci bir ekrana çevirir.
 CPU/GPU sıcaklığı ve kullanımı, RAM/VRAM, FPS, ağ ve ping değerlerini, ayrıca Spotify veya YouTube Music'te
 çalan şarkıyı büyük, tek bakışta okunan kutucuklarla gösterir; müziği telefondan kontrol edersin.
 
 - **Kaydırmalı sayfalar:** Oyun, Müzik, Detay (varsayılan). Parmakla sağa/sola geç.
 - **Düzenlenebilir ekran:** Ekrana uzun bas → kutucuk ekle, sil, sürükle, S/M/L boyutlandır, renk eşiklerini değiştir, sayfa ekle/sil.
 - **Müzik kontrolü:** Şarkı adı, kapak, ilerleme; ⏮ ⏯ ⏭ ve yalnızca o uygulamanın sesini değiştiren ses kaydırıcısı.
-- **Uygulama kurulmaz:** Telefonda Chrome'dan açılan bir sayfa (PWA). "Ana ekrana ekle" ile tam ekran çalışır.
+- **Uygulama kurulmaz:** Telefonda tarayıcıdan (Android: Chrome, iPhone: Safari) açılan bir sayfa (PWA). "Ana ekrana ekle" ile tam ekran çalışır.
 - **Yalnızca yerel ağ:** İnternete hiçbir şey gitmez. İlk bağlantıda 4 haneli eşleştirme kodu istenir.
 - **Hafif:** Oyun sırasında hedef ortalama < %1 CPU, < 150 MB RAM.
 
@@ -29,7 +29,7 @@ Telefon yatay; sayfalar arasında parmakla kaydırılır. (Görüntüler demo su
 ## Nasıl çalışır
 
 ```
-[Windows PC]  YanEkran.exe (sistem tepsisi, .NET 10)          [Android telefon]  Chrome / PWA
+[Windows PC]  YanEkran.exe (sistem tepsisi, .NET 10)          [Telefon]  Chrome / Safari / PWA
   ├─ Windows performans sayaçları  (CPU, RAM, ağ)
   ├─ NVIDIA NVML                   (GPU sıcaklık/kullanım/güç/VRAM)
   ├─ PresentMon (ETW)              (FPS, 1% low)           ◄── WebSocket, yerel ağ ──►  kutucuklar, kaydırma,
@@ -39,7 +39,7 @@ Telefon yatay; sayfalar arasında parmakla kaydırılır. (Görüntüler demo su
 
 ## Gereksinimler
 
-- Windows 10/11, Android telefon (Chrome), ikisi aynı Wi‑Fi'da
+- Windows 10/11 ve aynı Wi‑Fi'da bir telefon: Android (Chrome) ya da iPhone/iPad (Safari, deneysel)
 - [.NET 10 SDK](https://dotnet.microsoft.com/download) (derlemek için)
 - NVIDIA ekran kartı (GPU değerleri için; yoksa bu kutucuklar "—" gösterir)
 - **İsteğe bağlı:** [PresentMon](https://github.com/GameTechDev/PresentMon/releases) — FPS için. `PresentMon-<sürüm>-x64.exe` dosyasını `tools/presentmon/PresentMon.exe` olarak koy (test edilen: v2.6.0).
@@ -57,7 +57,16 @@ Masaüstünde **YanEkran** ve **YanEkran (FIFA modu)** kısayolları oluşur. Pr
 1. **YanEkran**'ı aç (yönetici izni ister: sensörler, FPS ve güvenlik duvarı kuralı için).
 2. Sistem tepsisindeki simgeye çift tıkla, QR kodu telefonla okut.
 3. Ekranda görünen 4 haneli kodu telefona gir. Eşleştirme, program açıldıktan ve kod gösterildikten sonraki 5 dakika boyunca kabul edilir.
-4. Chrome menüsünden **Ana ekrana ekle** de; ekranın kapanmaması için telefon şarjdayken Geliştirici seçenekleri → **Uyanık kal**'ı aç.
+4. Android: Chrome menüsünden **Ana ekrana ekle** de; ekranın kapanmaması için telefon şarjdayken Geliştirici seçenekleri → **Uyanık kal**'ı aç. iPhone için aşağıdaki bölüme bak.
+
+## iPhone / iPad (deneysel)
+
+Telefon tarafı bir web sayfası olduğu için iPhone'da Safari ile de çalışır, ancak gerçek bir iPhone'da test edilmedi.
+
+- **Ana ekrana ekle:** Safari'de Paylaş düğmesi → **Ana Ekrana Ekle**. Ana ekrandan ilk açılışta 4 haneli kodu bir kez daha girmen gerekir (iOS, ana ekran uygulamasına Safari'den ayrı bir hafıza verir).
+- **Ekran kapanmasın:** Ayarlar → Ekran ve Parlaklık → Otomatik Kilit → **Asla**. (Tarayıcının ekranı açık tutma özelliği iPhone'da yalnızca HTTPS bağlantıda çalışıyor.)
+- **Yatay kullan:** iOS sayfanın yönü kilitlemesine izin vermez; Yön Kilidi kapalıyken telefonu yatay çevir.
+- Sorun görürsen [bir issue aç](https://github.com/AKM-8byte/yan-ekran/issues).
 
 ## FIFA modu (hile koruması)
 

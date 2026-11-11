@@ -1,5 +1,7 @@
 // 4 haneli eşleştirme ekranı. Başarılı olunca token'ı döner.
 
+import { deviceName } from './platform.js';
+
 export function showPairing(root, { fetchImpl = fetch } = {}) {
   return new Promise((resolve) => {
     root.innerHTML = `
@@ -66,7 +68,3 @@ export function showPairing(root, { fetchImpl = fetch } = {}) {
   });
 }
 
-function deviceName() {
-  const m = /Android[^;)]*;\s*([^;)]+?)(?:\s+Build|\))/.exec(navigator.userAgent);
-  return (m && m[1] && m[1] !== 'K' ? m[1] : 'Android telefon').slice(0, 40);
-}
