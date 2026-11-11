@@ -11,6 +11,11 @@ CPU/GPU sıcaklığı ve kullanımı, RAM/VRAM, FPS, ağ ve ping değerlerini, a
 - **Yalnızca yerel ağ:** İnternete hiçbir şey gitmez. İlk bağlantıda 4 haneli eşleştirme kodu istenir.
 - **Hafif:** Oyun sırasında hedef ortalama < %1 CPU, < 150 MB RAM.
 
+## İndir
+
+**[Son sürümü indir →](https://github.com/AKM-8byte/yan-ekran/releases/latest)** `YanEkran-<sürüm>-win-x64.zip` hiçbir şey kurmadan çalışır.
+Zip'i bir klasöre çıkar, `kisayol-olustur.ps1` → sağ tık → **PowerShell ile çalıştır**, sonra masaüstündeki **YanEkran**'ı aç.
+
 ## Ekran görüntüleri
 
 Telefon yatay; sayfalar arasında parmakla kaydırılır. (Görüntüler demo sunucusunun sahte verileriyle alındı.)
@@ -40,7 +45,7 @@ Telefon yatay; sayfalar arasında parmakla kaydırılır. (Görüntüler demo su
 - **İsteğe bağlı:** [PresentMon](https://github.com/GameTechDev/PresentMon/releases) — FPS için. `PresentMon-<sürüm>-x64.exe` dosyasını `tools/presentmon/PresentMon.exe` olarak koy (test edilen: v2.6.0).
 - **İsteğe bağlı:** [PawnIO](https://pawnio.eu/) sürücüsü — CPU sıcaklığı, fan ve disk sensörleri için. Kurulu değilse bu kutucuklar "—" gösterir, program normal çalışır.
 
-## Kurulum
+## Kaynaktan kurulum
 
 ```powershell
 dotnet build src/TelefonPaneli.App -c Release
@@ -82,4 +87,4 @@ dotnet run --project tools/DemoServer   # sahte verilerle arayüz önizleme: htt
 [MIT](LICENSE) © 2026 AKM-8byte
 
 PresentMon (Intel, MIT), LibreHardwareMonitor (MPL-2.0), NAudio (MIT) ve QRCoder (MIT) kendi lisanslarıyla dağıtılır.
-PresentMon.exe bu depoda bulunmaz; kullanıcı kendisi indirir.
+PresentMon.exe bu depoda bulunmaz; kaynaktan derleyen kendisi indirir. Sürüm paketlerinde lisans metniyle birlikte gelir.
