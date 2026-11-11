@@ -1,6 +1,6 @@
 {
-  "name": "Telefon Paneli",
-  "short_name": "Panel",
+  "name": "YanEkran",
+  "short_name": "YanEkran",
   "start_url": "/",
   "scope": "/",
   "display": "fullscreen",

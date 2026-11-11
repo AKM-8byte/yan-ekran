@@ -45,7 +45,7 @@ public sealed class TrayApp : ApplicationContext
         _icon = new NotifyIcon
         {
             Icon = DrawIcon(o.FifaMode),
-            Text = o.FifaMode ? "Telefon Paneli (FIFA modu)" : "Telefon Paneli",
+            Text = o.FifaMode ? "YanEkran (FIFA modu)" : "YanEkran",
             ContextMenuStrip = menu,
             Visible = true,
         };
@@ -63,7 +63,7 @@ public sealed class TrayApp : ApplicationContext
                 "PawnIO hâlâ yüklü. FIFA'yı açma. Sürücüyü kullanan başka programları (FanControl, HWiNFO vb.) kapatıp FIFA modunda yeniden başlat ya da bilgisayarı yeniden başlat.",
                 ToolTipIcon.Error);
         }
-        else _icon.ShowBalloonTip(4000, "Telefon Paneli çalışıyor",
+        else _icon.ShowBalloonTip(4000, "YanEkran çalışıyor",
             "Telefonda aç: " + o.Url + "\nEşleştirme kodu: " + o.Pairing.CurrentCode, ToolTipIcon.Info);
     }
 
@@ -100,7 +100,7 @@ public sealed class TrayApp : ApplicationContext
     void ForgetDevices()
     {
         var r = MessageBox.Show("Eşleşmiş tüm telefonlar unutulsun mu? Telefonlar yeniden kod girmek zorunda kalacak.",
-            "Telefon Paneli", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            "YanEkran", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         if (r == DialogResult.Yes) _o.Pairing.ForgetAll();
     }
 

@@ -89,7 +89,7 @@ public static class Program
         catch (Exception ex)
         {
             TryLog(logPath, ex.ToString());
-            MessageBox.Show($"Sunucu başlatılamadı (port {Port} kullanımda olabilir).\n\n{ex.Message}", "Telefon Paneli",
+            MessageBox.Show($"Sunucu başlatılamadı (port {Port} kullanımda olabilir).\n\n{ex.Message}", "YanEkran",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             Cleanup();
             return;

@@ -9,7 +9,7 @@ public sealed class QrForm : Form
 
     public QrForm(string url, string pairingCode)
     {
-        Text = "Telefon Paneli — telefonu bağla";
+        Text = "YanEkran — telefonu bağla";
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = MinimizeBox = false;
         StartPosition = FormStartPosition.CenterScreen;

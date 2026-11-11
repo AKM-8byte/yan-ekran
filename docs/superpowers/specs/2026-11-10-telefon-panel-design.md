@@ -1,4 +1,4 @@
-# Telefon Paneli — Tasarım Belgesi
+# YanEkran (Telefon Paneli) — Tasarım Belgesi
 
 Tarih: 2026-11-10
 Durum: Taslak (kullanıcı onayı bekliyor)

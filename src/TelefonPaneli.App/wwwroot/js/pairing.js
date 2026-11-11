@@ -5,7 +5,7 @@ export function showPairing(root, { fetchImpl = fetch } = {}) {
     root.innerHTML = `
       <div class="pair">
         <div>
-          <h1>Telefon Paneli</h1>
+          <h1>YanEkran</h1>
           <p>Bilgisayarda saatin yanındaki simgeye tıkla ve görünen 4 haneli eşleştirme kodunu gir.</p>
           <div class="digits"><span></span><span></span><span></span><span></span></div>
           <div class="msg" role="status"></div>
